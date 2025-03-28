@@ -46,7 +46,6 @@ try:
 except:
    current_pitchboxes = pd.DataFrame()
 
-#st.dataframe(current_pitchboxes)
 current_pitchboxes['Opp'] = np.where(current_pitchboxes['road_team']==current_pitchboxes['Team'],current_pitchboxes['home_team'],current_pitchboxes['road_team'])
 current_pitchboxes['Park'] = current_pitchboxes['home_team']
 current_pitchboxes['Date'] = current_pitchboxes['game_date']
@@ -679,7 +678,7 @@ def refreshData():
     # pitch box update
     updated_pitchboxes = pd.concat([current_pitchboxes,new_rows_pitchbox])
     updated_pitchboxes = dropUnnamed(updated_pitchboxes)
-    updated_pitchboxes = updated_pitchboxes.drop_duplicates(subset=['player_id','game_id'])
+    updated_pitchboxes = updated_pitchboxes.drop_duplicates(subset=['player_id','game_id'],keep='last')
     updated_pitchboxes.to_csv(f'{file_path}/MainFiles/allpitchbox2025.csv')
 
     st.write(f'Retrieved data for {len(game_list)} games')
