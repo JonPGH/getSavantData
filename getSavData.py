@@ -181,7 +181,7 @@ def getMLBSchedule2():
 def getRecentGames(schedule):
     import datetime
     today = pd.to_datetime(datetime.date.today())
-    ten_days_ago = today - pd.DateOffset(days=10)
+    ten_days_ago = today - pd.DateOffset(days=3)
     last_ten_days = schedule[(pd.to_datetime(schedule['Date']).dt.date >= ten_days_ago.date())&(pd.to_datetime(schedule['Date']).dt.date <= today.date())]
     last_ten_days = last_ten_days.drop_duplicates(subset='Game ID')
     last_ten_days['Date'] = last_ten_days['Date'].dt.date
@@ -636,13 +636,16 @@ def summarizeData(df):
    st.write('Pitches by Team by Date Summary:')
    st.dataframe(sum,hide_index=True)
 
-def refreshData():
+def refreshData(current_hitboxes,current_pitchboxes):
     todays_date = getTodaysDate()
     schedule = getMLBSchedule()
     #st.write(schedule)
     recent_games = getRecentGames(schedule)
     #st.write(recent_games)
     game_list = recent_games['Game ID'].unique()
+
+    current_hitboxes = current_hitboxes[~current_hitboxes['game_id'].isin(game_list)]
+    current_pitchboxes = current_pitchboxes[~current_pitchboxes['game_id'].isin(game_list)]
 
     new_rows_pbp = pd.DataFrame()
     new_rows_hitbox = pd.DataFrame()
@@ -1064,7 +1067,7 @@ def main():
         st.markdown(f'<h5><center><i><small>Data current as of {max_date} </small></i></center></h5>', unsafe_allow_html=True)
 
         if st.button("Refresh Data"):
-           refreshData()
+           refreshData(current_hitboxes,current_pitchboxes)
         
         if st.button("Summarize Data"):
            summarize_data = summarizeData(current_data)
