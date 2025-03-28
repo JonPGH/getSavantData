@@ -10,3 +10,5 @@ requests==2.31.0
 
 # Interactive visualizations
 plotly==5.20.0
+
+matplotlib
